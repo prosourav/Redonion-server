@@ -36,7 +36,7 @@ app.get('/dishes',(req,res)=>{
                 }else{
                     res.send(documents);
                 }
-                client.close();
+                // client.close();
             })
         }
     })
