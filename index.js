@@ -88,7 +88,21 @@ app.get('/', (req, res) => {
       res.send(items);
     })
   })
-
+// cart quantity update
+  app.patch('/updateQuantity/:id',(req,res)=>{
+    const dishId = req.body.id;
+    const newQuantity = req.body.newQuantity;
+    console.log('newQuantity: ',newQuantity);
+    console.log('id:',dishId);
+    cartCollection.updateOne({_id:ObjectId(dishId)},{
+      $set:{QuanTity:newQuantity}
+    }
+    )
+    .then(result=>{
+      res.send(result.modifiedCount > 0);
+      // console.log(result);
+    })
+  })
 
 
 
