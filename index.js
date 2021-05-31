@@ -15,8 +15,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
   console.log('error : ',err);
   const foodCollection = client.db("redonion").collection("dishes");
-  // new
   const aboutCollection = client.db("redonion").collection("About");
+  const cartCollection = client.db("redonion").collection("cart");
+
   // 
   console.log('successFull');
 
@@ -25,11 +26,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-//Adding new books to shop
+//Adding new products
 
   app.post('/adddish', (req, res)=>{
     const dish = req.body;
-
     foodCollection.insertOne(dish)
     .then(result =>{
       console.log('inserted count: ',result.insertedCount)
@@ -37,9 +37,9 @@ app.get('/', (req, res) => {
     })
     
   })
+  //Adding new pros of our company
   app.post('/about', (req, res)=>{
     const about = req.body;
-
      aboutCollection.insertOne(about)
     .then(result =>{
       console.log('inserted count: ',result.insertedCount)
@@ -47,20 +47,21 @@ app.get('/', (req, res) => {
     })
     
   })
-
+// reading all data of dishes
   app.get('/dishes',(req, res)=>{
     foodCollection.find()
     .toArray((err, items)=>{
       res.send(items);
     })
   })
+  // reading all data of pros of rest
   app.get('/about',(req, res)=>{
     aboutCollection.find()
     .toArray((err, items)=>{
       res.send(items);
     })
   })
-// check out data
+// reading dish detail data
   app.get('/fooddetail/:id',(req, res)=>{
     const id = req.params.id;
     foodCollection.findOne({_id:ObjectId(req.params.id)})
@@ -70,23 +71,23 @@ app.get('/', (req, res) => {
   })
  
 
-//   //order data 
-//   app.post('/order',(req,res)=>{
-//     const newOrder = req.body;
-//     console.log("New order: ",newOrder);
-//     ordersCollection.insertOne(newOrder)
-//     .then(result =>{
-//       console.log('inserted count: ',result.insertedCount)
-//       res.send(result.insertedCount > 0);
-//     })
-//   })
+  //cart data 
+  app.post('/addToCart',(req,res)=>{
+    const cart = req.body;
+    console.log("New cart: ",cart);
+    cartCollection.insertOne(cart)
+    .then(result =>{
+      console.log('inserted count: ',result.insertedCount)
+      res.send(result.insertedCount > 0);
+    })
+  })
 
-//   app.get('/order',(req,res)=>{
-//     ordersCollection.find({email:req.query.email})
-//     .toArray((err, items)=>{
-//       res.send(items);
-//     })
-//   })
+  app.get('/myCart',(req,res)=>{
+    cartCollection.find()
+    .toArray((err, items)=>{
+      res.send(items);
+    })
+  })
 
 
 
