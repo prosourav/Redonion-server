@@ -54,6 +54,14 @@ app.get('/', (req, res) => {
       res.send(items);
     })
   })
+// reading single data of dishes
+  app.get('/dishesdata',(req, res)=>{
+    const search = req.query.search;
+    foodCollection.find({dishName:{$regex:search}})
+    .toArray((err, items)=>{
+      res.send(items);
+    })
+  })
   // reading all data of pros of rest
   app.get('/about',(req, res)=>{
     aboutCollection.find()
