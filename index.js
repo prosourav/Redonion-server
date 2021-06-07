@@ -112,7 +112,15 @@ app.get('/', (req, res) => {
       // console.log(result);
     })
   })
-
+  // delete from cart
+  app.delete('/deleteItem/:id',(req,res)=>{
+    const itemId = req.params.id;
+    console.log(itemId);
+    cartCollection.deleteOne({_id:ObjectId(itemId)})
+    .then(result=>{
+      res.send(result.modifiedCount > 0);
+    })
+  })
 
 
 
