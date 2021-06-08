@@ -17,6 +17,7 @@ client.connect(err => {
   const foodCollection = client.db("redonion").collection("dishes");
   const aboutCollection = client.db("redonion").collection("About");
   const cartCollection = client.db("redonion").collection("cart");
+  const ordersCollection = client.db("redonion").collection("orders");
 
   // 
   console.log('successFull');
@@ -38,7 +39,7 @@ app.get('/', (req, res) => {
     
   })
   //Adding new pros of our company
-  app.post('/about', (req, res)=>{
+  app.post('/addAbout', (req, res)=>{
     const about = req.body;
      aboutCollection.insertOne(about)
     .then(result =>{
@@ -91,6 +92,18 @@ app.get('/', (req, res) => {
     })
   })
 
+
+  // orders
+  app.post('/orders',(req,res)=>{
+    const order = req.body;
+    // console.log("New cart: ",order);
+    ordersCollection.insertOne(order)
+    .then(result =>{
+      console.log('inserted count: ',result.insertedCount)
+      res.send(result.insertedCount > 0);
+    })
+  })
+
   app.get('/myCart',(req,res)=>{
     cartCollection.find()
     .toArray((err, items)=>{
@@ -117,6 +130,14 @@ app.get('/', (req, res) => {
     const itemId = req.params.id;
     console.log(itemId);
     cartCollection.deleteOne({_id:ObjectId(itemId)})
+    .then(result=>{
+      res.send(result.modifiedCount > 0);
+    })
+  })
+
+
+  app.delete('/deleteCart',(req,res)=>{
+    cartCollection.deleteMany()
     .then(result=>{
       res.send(result.modifiedCount > 0);
     })
