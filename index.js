@@ -64,13 +64,22 @@ app.get('/', (req, res) => {
       res.send(items);
     })
   })
-  // reading all data of pros of rest
+  // reading all data of about
   app.get('/about',(req, res)=>{
     aboutCollection.find()
     .toArray((err, items)=>{
       res.send(items);
     })
   })
+  // getting all data of orders a user
+  app.get('/myCart',(req,res)=>{
+    const Name = req.query.name;
+    cartCollection.find({UserName:Name})
+    .toArray((err, items)=>{
+      res.send(items);
+    })
+  })
+  
 // reading dish detail data
   app.get('/fooddetail/:id',(req, res)=>{
     const id = req.params.id;
@@ -84,7 +93,7 @@ app.get('/', (req, res) => {
   //cart data 
   app.post('/addToCart',(req,res)=>{
     const cart = req.body;
-    console.log("New cart: ",cart);
+    // console.log("New cart: ",cart);
     cartCollection.insertOne(cart)
     .then(result =>{
       console.log('inserted count: ',result.insertedCount)
@@ -103,11 +112,12 @@ app.get('/', (req, res) => {
       res.send(result.insertedCount > 0);
     })
   })
-// reading my cart items
-  app.get('/myCart',(req,res)=>{
-    const Name = req.query.name;
-    cartCollection.find({UserName:Name})
+// reading my orders items
+  app.get('/myOrders',(req,res)=>{
+    const ordrId = req.query.orderId;
+    ordersCollection.find({orderId:ordrId})
     .toArray((err, items)=>{
+      // console.log(items);
       res.send(items);
     })
   })
@@ -127,7 +137,7 @@ app.get('/', (req, res) => {
   // delete from cart
   app.delete('/deleteItem/:id',(req,res)=>{
     const itemId = req.params.id;
-    console.log(itemId);
+    // console.log(itemId);
     cartCollection.deleteOne({_id:ObjectId(itemId)})
     .then(result=>{
       res.send(result.modifiedCount > 0);
